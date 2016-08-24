@@ -1,79 +1,12 @@
-window.onload = function() {
-    var result;
+// we're using google data table
+google.charts.load('current', {'packages':['table']});
+
+
+google.charts.setOnLoadCallback(function () {
+
+    // initialize client side app
     App.initialize();
-
     
-    // get the files that need to be copied
-    refreshData();
-
-    // get selecteddata
-    function refreshData() {
-        spinCursor();
-        // ask the server to do this
-        Provoke.run("Server", "getFiles",getParameters())
-            .then(function(data) {
-                if (!data || !data.files.length) {
-                    App.showNotification("Failure getting files", "no files found in source folder");
-                    resetCursor();
-                }
-                else {
-                    result = data;
-
-                    // use the property keys as the table column headers
-                    var fields = Object.keys(data.files[0]);
-
-                    // build the table
-                    var table = DomUtils.elem("thetable");
-
-                    // this loops through the data, one row per file
-                    table.innerHTML = "<table>" +
-                        fields.reduce(function(p, c) {
-                            return p + "<th>" + c + "</th>";
-                        }, "<thead><tr>") + "</tr></thead>" +
-                        "<tbody>" + data.files.map(function(d) {
-                            return fields.reduce(function(p, c) {
-                                return p + "<td>" +
-                                    d[c] +
-                                    "</td>";
-                            }, "<tr>") + "</tr>";
-                        }).join("") +
-                        "</tbody></table>";
-
-                    // good to copy so enable the button
-                    DomUtils.elem("copy").disabled = false;
-                    resetCursor();
-                }
-            })['catch'](function(err) {
-                App.showNotification("Failure getting files", err);
-                resetCursor();
-            });
-
-    }
-
-    // add event listeners
-    DomUtils.elem("copy").addEventListener("click", function() {
-        // starting the copy
-        DomUtils.elem("copy").disabled = true;
-        spinCursor();
-        Provoke.run("Server", "copyFiles", result)
-            .then(function(data) {
-                App.toast('Copy completed', data.files.length +
-                    ' files copied to folder ' + data.target.name);
-                    resetCursor();
-            })['catch'](function(err) {
-                DomUtils.elem("copy").disabled = false;
-                App.showNotification("Copy failure", err);
-                resetCursor();
-            });
-
-    }, false);
-
-
-    function resetCursor() {
-        DomUtils.hide('spinner', true);
-    }
-
-    function spinCursor() {
-        DomUtils.hide('spinner', false);
-    }
-};
+    // start orchestration
+    Client.initialize();
+});
