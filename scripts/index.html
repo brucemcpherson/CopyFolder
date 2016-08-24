@@ -3,13 +3,13 @@
   <head>
   <base target="_top">
     <?!= Include.html(['cdn.css']); ?>
-    <?!= Include.css(['spinner','app']); ?>  
+    <?!= Include.css(['app']); ?>  
   </head>
   <body>
    
-    <?!= Include.html(['appmarkup','cdn']); ?>  
-    <?!= Include.js(['main']); ?>
-    <?!= Include.gs([ 'App', 'DomUtils','Provoke']); ?>
+   <?!= Include.html(['appmarkup','cdn']); ?>  
+   <?!= Include.js(['main']); ?>
+   <?!= Include.gs([ 'App', 'DomUtils','Provoke','Client','ClientProgress','VizTable']); ?>
 
   
 
