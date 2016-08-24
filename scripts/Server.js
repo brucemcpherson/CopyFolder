@@ -19,23 +19,69 @@ function exposeRun (namespace, method , argArray ) {
  */
 var Server = (function (ns) {
   
+  var getCache_ = function () {
+    return CacheService.getUserCache();
+  };
+  /**
+   * initialize a server progress item
+   * @param {object} [item] an initial value for the progress item if required
+   * @return {object} a status object
+   */
+  ns.createProgress = function (item) {
+    return ServerProgress.newItem(getCache_(),item).getStatus();
+  };
+  
+    /**
+   * initialize a server progress item
+   * @param {object} [item] an initial value for the progress item if required
+   * @return {object} a status object
+   */
+  ns.getProgress = function (item) {
+    return ServerProgress.getById (getCache_(),item.id);
+  };
+  
+  /**
+   * set progress
+   * @param {number} progress progress 0-1
+   * @param {object} item the current item
+   * @return {object} the updated item
+   */
+  ns.setProgress = function (progress,item) {
+    return ServerProgress.setItem (getCache_(), item, progress);
+  };
   /**
    * copy the files when the button is hit on the client
    * @param {object} data the object describing what needs to be copied
+   * @param {object} [item] this is a progress item
    * @return {object} the data object as sent
    */ 
-  ns.copyFiles = function (data) {
+  ns.copyFiles = function (data,item) {
     
     // get the source and target folders
     var sourceFolder = DriveApp.getFolderById(data.source.id);
     var targetFolder = DriveApp.getFolderById(data.target.id);
     
-    // for each of the data files make a copy to the target folder
-    data.files.forEach(function (d) {
-      var file = DriveApp.getFileById(d.id);
-      file.makeCopy(file.getName(), targetFolder);
-    });
+    // we can use this to send back what we're actually working on
+    item.activeFiles = [];
     
+    // for each of the data files make a copy to the target folder
+    data.files.forEach(function (d,i,a) {
+      var file = DriveApp.getFileById(d.id);
+      if (item) {
+        // set max an min progress for this pass
+        item.activeFiles.push(d.id);
+        item.max = (i+1)/a.length;
+        item.min = i/a.length;
+        ns.setProgress(item.min, item);
+      }
+      // copy the file
+      file.makeCopy(file.getName(), targetFolder);
+
+    });
+    // done
+    if (item) {
+      ns.setProgress(1, item);
+    }    
     // return the data that was sent for processing
     return data;
   };
