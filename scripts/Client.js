@@ -6,7 +6,7 @@ var Client = (function (ns) {
   ns.control = {
     progress:{
       status:null,
-      interval:750
+      interval:1783
     },
     table: {
       vizTable:null,
@@ -47,20 +47,20 @@ var Client = (function (ns) {
   */
   ns.progressPoll = function (immediate, close) {
     
-    if (ClientProgress.control.running && ifvisible.now()) {
+    if (ClientProgress.control.running) {
       poller_(immediate ? 10 : ns.control.progress.interval)
       
       .then (function () {
+        ns.control.progress.status.barProgress = ClientProgress.getBarProgress();
         return Provoke.run('Server','getProgress', ns.control.progress.status);
       })
       
       .then (function (status) {
-        
         // if its still running after all that
         if (ClientProgress.control.running) {
           // store the status
           ns.control.progress.status = status;
-        
+         
           // update the status bar
           ClientProgress.smoothProgress (ns.control.progress.status);
 
@@ -70,6 +70,7 @@ var Client = (function (ns) {
           // the last one finished with a close down
           if (close) {
             ClientProgress.done();
+            ClientProgress.control.running = false;
           }
         }
         
@@ -82,19 +83,17 @@ var Client = (function (ns) {
         App.showNotification(err);
       });
     }
-    // wait a bit longer and try again
+    // 
     else {
-      poller_(ns.control.progress.interval*(1+Math.random()))
-      .then (function() {
-        ns.progressPoll();
-      })
+      // nothing to do
+      ClientProgress.done();
+      
     }
 
   };
   
   // polling for progress update
   function poller_ (waitFor) {
-    
     return new Promise (function (resolve, reject) {
       setTimeout(function () {
         resolve();
@@ -104,6 +103,9 @@ var Client = (function (ns) {
   }
   // get set up listeners and get started
   ns.initialize = function () {
+    
+    // complete the title from the params
+    DomUtils.elem('target').innerHTML = getParameters().folders.target;
     
     // add event listeners
     DomUtils.elem("copy").addEventListener("click", function() {
