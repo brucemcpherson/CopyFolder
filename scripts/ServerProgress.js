@@ -74,7 +74,8 @@ var ServerProgress = (function(ns) {
   */
   ns.getById = function (cache, id) {
     var status = cache.get (id);
-    return status ? JSON.parse(status) : null;
+    var result = status ? JSON.parse(status) : null;
+    return result;
   };
   
   /**
