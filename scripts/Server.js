@@ -60,18 +60,19 @@ var Server = (function (ns) {
     // get the source and target folders
     var sourceFolder = DriveApp.getFolderById(data.source.id);
     var targetFolder = DriveApp.getFolderById(data.target.id);
-    
     // we can use this to send back what we're actually working on
     item.activeFiles = [];
     
     // for each of the data files make a copy to the target folder
     data.files.forEach(function (d,i,a) {
       var file = DriveApp.getFileById(d.id);
+      
       if (item) {
         // set max an min progress for this pass
         item.activeFiles.push(d.id);
         item.max = (i+1)/a.length;
         item.min = i/a.length;
+        item.size = file.getSize();
         ns.setProgress(item.min, item);
       }
       // copy the file
@@ -81,7 +82,8 @@ var Server = (function (ns) {
     // done
     if (item) {
       ns.setProgress(1, item);
-    }    
+    } 
+
     // return the data that was sent for processing
     return data;
   };
