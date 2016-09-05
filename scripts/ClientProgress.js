@@ -14,14 +14,15 @@ var ClientProgress = (function (ns) {
     },
     trickle: {
       duration:0,
-      speed:250,
-      defaultDuration:200000
+      speed:350,
+      defaultDuration:360000,
+      rate:350/360000
     }
   };
   
   // check if the bar is running
   ns.isRunning = function () {
-    return NProgress.isStarted()
+    return NProgress.isStarted();
   };
   
   /** 
@@ -36,14 +37,22 @@ var ClientProgress = (function (ns) {
     // this is the expected overall duration 
     // and affects the trickle speed and rate.
     var nt = ns.control.trickle;
+    nt.duration = duration;
+    
+    // what's left to do
+    nt.bar = ns.getBarProgress();
+    nt.left = 1-nt.bar;
+    
+    // what time is left
+    nt.togo = nt.left*nt.duration;
     
     // the rate at which it needs to go it whats left - whats been reported
-    var rate = nt.speed/(ns.isRunning() ? (1-ns.getBarProgress())*duration : duration) ;
-    nt.duration = duration;
+    nt.rate = nt.left*nt.speed/nt.togo;
+    
     
     // adjust the trickle rate to accommodate whats left
     NProgress.configure({ 
-      trickleRate: rate , 
+      trickleRate: nt.rate , 
       trickleSpeed: nt.speed 
     });
     return ns;
@@ -81,12 +90,23 @@ var ClientProgress = (function (ns) {
   
   // any initialization
   ns.initialize = function () {
+    // just discovered that trickle speed does exist anymore
+    //so ..
+    NProgress.trickle = function () {
+      NProgress.inc (ns.control.trickle.rate);
+    };
+    
     NProgress.configure({ 
       easing: 'linear',
-      trickleRate:.01,
-      trickleSpeed:ns.control.trickle.speed
+      trickleRate:ns.control.trickle.rate,
+      trickleSpeed:ns.control.trickle.speed,
+      minimum: 0.01
     });
     return ns;
+  };
+  
+  ns.set = function (perc) {
+    NProgress.set (perc);
   };
   
   /**
@@ -99,26 +119,28 @@ var ClientProgress = (function (ns) {
     var nt = ns.control.trickle;
     
     // we have the starttime, and the update time. so that's the duration to get this far
-    var duration = item.updatedAt - item.startTime;
+    var soFar = item.updatedAt - item.startTime;
     
     // how long it'll take at this rate
-    var estDuration = item.progress ? duration /item.progress : nt.duration;
+    var estDuration = item.progress ? soFar /item.progress : nt.duration;
 
+    // but if we havent yet reached the minimum duration, go there
+    if (item.min && ns.getBarProgress() < item.min) {
+      //ns.set (item.min);
+    }
+    
     // so the expected duration must be between 
-    var soFar = nt.duration * ns.getBarProgress();
-    var maxDuration = duration / Math.min(item.max,1);
-    var minDuration = duration / Math.max(item.min,0.01);
-
+    var maxDuration = soFar / Math.min(item.max,1);
+    var minDuration = soFar / Math.max(item.min,0.01);
     
     // we can set the new estimate duration if needed
-    if (soFar > maxDuration && item.max) {
+    if (nt.duration > maxDuration && item.max) {
+      // slowing it down
        ns.setTrickle (maxDuration);
     }
-    else if (soFar < minDuration && item.min) {
+    else if (nt.duration < minDuration && item.min) {
+      // speeding it up
        ns.setTrickle (minDuration);
-    }
-    else if (item.progress) {
-       ns.setTrickle (estDuration);
     }
     
     return ns;
