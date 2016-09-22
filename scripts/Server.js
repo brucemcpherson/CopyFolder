@@ -1,3 +1,15 @@
+// this is to test that everything is working 
+// change the folder id to whatever
+// and the target to whatever
+function testServer() {
+  var files = Server.getFiles({
+    folders: {
+      sourceid:'0B92ExLh4POiZRjJaV29TU29vcWs',
+      target:'GasBeginnersWorkingFiles'
+    }
+  });
+  Server.copyFiles(files);
+}
 /**
 * used to expose memebers of a namespace
 * @param {string} namespace name
@@ -60,8 +72,12 @@ var Server = (function (ns) {
     // get the source and target folders
     var sourceFolder = DriveApp.getFolderById(data.source.id);
     var targetFolder = DriveApp.getFolderById(data.target.id);
+    Logger.log(targetFolder.getId());
+    
     // we can use this to send back what we're actually working on
-    item.activeFiles = [];
+    if(item) {
+      item.activeFiles = [];
+    }
     
     // for each of the data files make a copy to the target folder
     data.files.forEach(function (d,i,a) {
@@ -98,11 +114,11 @@ var Server = (function (ns) {
     var sourceFolder = DriveApp.getFolderById(parameters.folders.sourceid);
   
     // find or create the target folder
-    var iterator = DriveApp.getFoldersByName(parameters.folders.target);
+    var iterator = DriveApp.getRootFolder().searchFolders('title = "' + parameters.folders.target +  '" and "me" in owners');
   
     // create if doesnt exist
     var targetFolder = iterator.hasNext() ? iterator.next() : DriveApp.createFolder(parameters.folders.target);
-  
+
     // get all the files in the source folder
     var iterator = sourceFolder.getFiles();
     var files = [];
