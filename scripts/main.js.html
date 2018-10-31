@@ -1,0 +1,12 @@
+// we're using google data table
+google.charts.load('current', {'packages':['table']});
+
+
+google.charts.setOnLoadCallback(function () {
+
+    // initialize client side app
+    App.initialize();
+    
+    // start orchestration
+    Client.initialize();
+});
