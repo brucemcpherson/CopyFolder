@@ -1,5 +1,5 @@
 # Google Apps Script Project: CopyFolder
-This repo (CopyFolder) was automatically updated on 31 October 2018 11:43:02 GMT by GasGit
+This repo (CopyFolder) was automatically updated on 09/07/2020, 17:40:46 by GasGit
 
 For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")
 ## Details for Apps Script project CopyFolder
