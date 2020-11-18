@@ -1,9 +1,9 @@
 # Google Apps Script Project: CopyFolder
 This repo (CopyFolder) was automatically created on 18 August 2016 11:39:06 BST by GasGit
-for more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation")
+for more information see the [desktop liberation site](https://ramblings.mcpher.com/drive-sdk-and-github/getting-your-apps-scripts-to-github/ "desktop liberation")
 you can see [library and dependency information here](dependencies.md)
 
-More info at http://ramblings.mcpher.com/Home/excelquirks/gassnips/copyfolders
+More info at https://ramblings.mcpher.com/google-apps-scripts-snippets-2/a-webapp-to-share-copies-of-the-contents-of-folders/
 
 CopyFolder is a way of sharing copies of the contents of a folder. When you use Google Docs sharing, you are not sharing a copy of a document, but rather, you are sharing the document. For things like scripts though, you probably want people to make a copy of what you are sharing so they can go ahead and edit their own copy. 
 
