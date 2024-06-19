@@ -1,7 +1,13 @@
 # Google Apps Script Project: CopyFolder
-This repo (CopyFolder) was automatically updated on 09/07/2020, 17:40:46 by GasGit
+This repo (CopyFolder) was automatically updated on 6/19/2024, 3:15:34 PM by GasGit
 
-For more information see the [desktop liberation site](https://ramblings.mcpher.com/drive-sdk-and-github/getting-your-apps-scripts-to-github/ "desktop liberation") or [contact me on Gitter](https://gitter.im/desktopliberation/community "Bruce McPherson - GDE")
+For more information on gasgit, see the [desktop liberation site](https://ramblings.mcpher.com/drive-sdk-and-github/migrategasgit/ "desktop liberation")
+
+For more info on CopyFolder try https://ramblings.mcpher.com/?s=CopyFolder or use the issues section of this repo to contact me
+## Library reference
+1TLgPlBAq1Nrve07xJxyBVHqjS65c6jRfv4k39C4MQFH9TH-G9U-eqxbU
+
+
 ## Details for Apps Script project CopyFolder
 Where possible directly referenced or sub referenced library sources have been copied to this repository, or you can include the library references shown. 
 The shared link for [CopyFolder is here](https://script.google.com/d/1TLgPlBAq1Nrve07xJxyBVHqjS65c6jRfv4k39C4MQFH9TH-G9U-eqxbU/edit?usp=sharing "open in the GAS IDE")
